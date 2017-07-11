@@ -1,6 +1,42 @@
 # CarND-Controls-MPC
 Self-Driving Car Engineer Nanodegree Program
 
+The Model: 
+
+The kinematic model includes the 
+•	vehicle's x and y coordinates, 
+•	orientation angle (psi),
+•	velocity (v),
+•	the cross-track error (cte),
+•	psi error (epsi). 
+
+Actuator Outputs: 
+•	Acceleration (a) 
+•	Steering angle (delta). 
+
+State Equations: 
+The model combines the state and actuations from the previous timestep to calculate the state for the current timestep based on the equations below:
+
+x_[t+1] = x[t] + v[t] * cos(psi[t]) * dt
+y_[t+1] = y[t] + v[t] * sin(psi[t]) * dt
+psi_[t+1] = psi[t] + v[t] / Lf * delta[t] * dt
+v_[t+1] = v[t] + a[t] * dt
+cte[t+1] = f(x[t]) - y[t] + v[t] * sin(epsi[t]) * dt
+epsi[t+1] = psi[t] - psides[t] + v[t] * delta[t] / Lf * dt
+
+Timestep Length and Elapsed Duration (N & dt): 
+The prediction horizon (T) is the duration over which future predictions are made. 
+N is the number of timesteps in the horizon. 
+dt is time elapses between actuations. Discretization factor
+The values chosen for N and dt are 10 and 0.1, respectively. 
+Other values that have been tried are 12/0.12 25/0.1, 12/0.1. All these tries gave an unstable behavior of pushing the vehicle out of the track.  These values mean that the optimizer is considering a one-second duration in which to determine a corrective trajectory. 
+
+Polynomial Fitting and MPC Preprocessing: 
+The waypoints are preprocessed by transforming them to the vehicle's perspective (see main.cpp lines 106-118). This simplifies the process to fit a polynomial to the waypoints because the vehicle's x and y coordinates are now at the origin (0, 0) and the orientation angle is also zero.
+
+Model Predictive Control with Latency: 
+The approach to dealing with latency was accounted by keeping the dt as 100ms. The original kinematic equations depend upon the actuations from the previous timestep, but with a delay of 100ms (which happens to be the timestep interval) the actuations are applied another timestep later, so the equations have been altered to account for this (MPC.cpp). 
+
 ---
 
 ## Dependencies
