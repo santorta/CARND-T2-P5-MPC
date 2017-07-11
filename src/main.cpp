@@ -8,6 +8,7 @@
 #include "Eigen-3.3/Eigen/QR"
 #include "MPC.h"
 #include "json.hpp"
+#include <stddef.h>
 
 // for convenience
 using json = nlohmann::json;
@@ -107,7 +108,7 @@ int main() {
           Eigen::VectorXd   y_car_space = Eigen::VectorXd( ptsx.size() ) ;
           
           // Transform ptsx, ptsy to car coords
-          for (int i = 0; i < ptsx.size(); i++) {
+          for (unsigned i = 0; i < ptsx.size(); i++) {
             double dtx = ptsx[i] - px;
             double dty = ptsy[i] - py;
             
@@ -131,7 +132,7 @@ int main() {
           Eigen::VectorXd state(6);
     
         
-          const double Lf = 2.67;
+          
           double x_pos = 0; //Because it is relative to the car coordinate now
           double y_pos = 0;//Because it is relative to the car coordinate now
           double psi_init = 0;
